@@ -23,14 +23,31 @@ int main() {
     scanf("%[^\n]s", str);
     int len1 = strlen(target);
     int len2 = strlen(str);
-    int i = 0;
-    while() {
-
-    }
     
+    for(int i = 0; i < len1; ++i) {
+        if((target[i] >= 'A') && (target[i] <= 'Z')) {
+            target[i] += 32;
+        }
+    }
 
-
-
-
+    for(int i = 0; i < len2; ++i) {
+        if((str[i] >= 'A') && (str[i] <= 'Z')) {
+            str[i] += 32;
+        }
+    }
+    int n = 0;
+    int cnt = 0;
+    while(n < len2) {
+        for(int i = 0; i < len1; ++i) {
+            if(target[i] == str[i + n]) {
+                if(i == len1 - 1) {
+                    cnt += 1;
+                }
+            }
+            break;
+        }
+        n += 1;
+    }
+    cout << cnt << endl;
     return 0;
 }
