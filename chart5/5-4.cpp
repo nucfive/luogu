@@ -8,94 +8,92 @@
  ************************************************************************/
 
 #include <iostream>
-#include <string>
 #include <cstdio>
-#include <cstring>
-using std::string;
-using std::cout;
-using std::cin;
-using std::endl;
-
+using namespace std;
 int main() {
-    char s[25];
-    scanf("%s", s);
-    int len = strlen(s);
-    int flag1 = 0,flag2 = 0,  mark = 0, zero = 0;
-    for(int i = 0; i < len; ++i) {
-        if(s[i] == '0') {
-            zero += 1;
+    char num[25] = {0};
+    char ans[25] = {0};
+    int flag = 0, flag1, length;
+    scanf("%s", num);
+    for (int i = 0; num[i]; i++) {
+        switch (num[i]) {
+            case '.' : flag = 1; flag1 = i; break;
+            case '/' : flag = 2; flag1 = i; break;
+            case '%' : flag = 3; flag1 = i; break;
         }
+        length = i;
     }
-
-    for(int i = 0; i < len; ++i) {
-        if(zero + 2 < len) {
-            if(s[i] == '.') {
-                flag1 = 0;
-                flag2 = 0;
-                mark = i;
-                break;
-            } else if(s[i] == '%') {
-                flag1 = 1;
-                flag2 = 1;
-                mark = i;
-                break;
-            } else if(s[i] == '/') {
-                flag1 = 2;
-                flag2 = 2;
-                mark = i;
-                break;
-            } else {
-                flag1 = 3;
-                flag2 = 3;
-            }
-        } else if(zero + 2 == len) {
-            flag2 = 100;
-        }
-    }
-    cout << zero << " " << len << endl;
-    switch(flag1 + flag2) {
+    switch (flag) {
         case 0 : {
-            for(int i = 0; i < mark; ++i) {
-                if(s[mark - i - 1] == '0') continue;
-                cout << s[mark - i - 1];
-            }  
-            cout << s[mark];
-            for(int i = 0; i < mark; ++i) {
-                if(s[len - i - 1] == '0')continue;
-                cout << s[len - i - 1];
+            for (int i = 0; num[i]; i++) {
+                ans[length--] = num[i];
             }
+            char *p = ans;
+            while (*p == '0') p++;
+            if (*p == 0) cout << "0" << endl;
+            cout << p << endl;
             break;
-        } 
+        }
+        case 1 : {
+            int raw_flag = flag1;
+            int raw_length = length;
+            for (int i = 0; i < raw_flag; i++) {
+                ans[--flag1] = num[i];
+            }
+            ans[raw_flag] = '.';
+            flag = raw_flag;
+            for (int i = raw_flag + 1; num[i]; i++) {
+                ans[length--] = num[i];
+            }
+            int front = 0;
+            while (ans[front] == '0') front++;
+            if (ans[front] == '.') front--;
+            int back = raw_length;
+            while (ans[back] == '0') back --;
+            if (ans[back] == '.') back ++;
+            for (int i = front; i <= back; i++) {
+                cout << ans[i];
+            }
+            cout << endl;
+            break;
+        }
         case 2 : {
-            for(int i = 0; i < mark; ++i) {
-                if(s[mark - 1 - i] == '0') continue;
-                cout << s[mark - i - 1];
-            } 
-            cout << s[mark];
+            int raw_flag = flag1;
+            for (int i = 0; i < raw_flag; i++) {
+                ans[--flag1] = num[i];
+            }
+            ans[raw_flag] = '/';
+            flag = raw_flag;
+            while (num[length] == '0') length--;
+            int raw_length = length;
+            for (int i = raw_flag + 1; i <= raw_length; i++) {
+                ans[length--] = num[i];
+            }
+            int front = 0;
+            while (ans[front] == '0') front++;
+            if (ans[front] == '/') front--;
+            for (int i = front; i <= raw_length; i++) {
+                cout << ans[i];
+            }
+            cout << endl;
             break;
         }
-        case 4 : {
-            for(int i = 0; i < mark; ++i) {
-                if(s[mark - 1 - i] == '0') continue;
-                cout << s[mark - i - 1];
+        case 3 : {
+            int raw_flag = flag1;
+            for (int i = 0; i < raw_flag; i++) {
+                ans[--flag1] = num[i];
             }
-            cout << s[mark];
-            for(int i = 0; i < mark; ++i) {
-                if(s[len - i - 1] == '0') continue;
-                cout << s[len - i];
+            ans[raw_flag] = '%';
+            int front = 0;
+            while (ans[front] == '0') front++;
+            if (ans[front] == '%') front--;
+            for (int i = front; i <= length; i++) {
+                cout << ans[i];
             }
+            cout << endl;
             break;
         }
-        case 6 : {
-            for(int i = 0; i < len; ++i) {
-                cout << s[len - i - 1];
-            }
-            break;
-        }
-        case 100 : cout << "0.0"; break;
-        case 101 : cout << "0.0%";break;
-        case 102 : cout << "0/0";break;
-        default: break;
+        
     }
-    return 0 ;
+    return 0;
 }
